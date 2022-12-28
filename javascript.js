@@ -1,4 +1,20 @@
-game();
+//game();
+
+let computerPoints = 0;
+let playerPoints = 0;
+
+const rockBtn = document.querySelector("#rockbtn");
+const paperBtn = document.querySelector("#paperbtn");
+const scissorBtn = document.querySelector("#scissorbtn");
+
+rockBtn.addEventListener("click", playRound);
+paperBtn.addEventListener("click", playRound);
+scissorBtn.addEventListener("click", playRound);
+
+let playerPointsPara = document.querySelector("#playerpoints");
+let computerPointsPara = document.querySelector("#computerpoints");
+let winningStatement = document.createElement("div");
+let winningStatementOn = false;
 
 function getComputerChoice() {
     switch(Math.floor(Math.random() * 3)) {
@@ -8,53 +24,48 @@ function getComputerChoice() {
     }
 }
 
-function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
+function playRound() {
+    playerSelection = this.textContent.toLowerCase();
+    computerSelection = getComputerChoice();
+    
     if (computerSelection === "rock") {
         switch(playerSelection) {
-            case "rock": return "It's a tie";
-            case "paper": return "Player wins";
-            case "scissor": return "Computer wins";
+            case "paper": playerPoints++;
+            case "scissor": computerPoints++;
         }
     }
     if (computerSelection === "paper") {
         switch(playerSelection) {
-            case "paper": return "It's a tie";
-            case "scissor": return "Player wins";
-            case "rock": return "Computer wins";
+            case "scissor": playerPoints++;
+            case "rock": computerPoints++;
         }
     }
     if (computerSelection === "scissor") {
         switch(playerSelection) {
-            case "scissor": return "It's a tie";
-            case "rock": return "Player wins";
-            case "paper": return "Computer wins";
+            case "rock": playerPoints++;
+            case "paper": computerPoints++;
         }
     }
-}
 
-function getPlayerChoice() {
-    return prompt("Enter Rock, Paper or Scissor");
-}
-
-function game() {
-    let playerPoints = 0;
-    let ComputerPoints = 0;
-    for (let i = 0; i < 5; i++) {
-        let winner = playRound(getPlayerChoice(), getComputerChoice())
-        console.log(winner);
-        switch(winner) {
-            case "Player wins": playerPoints++;
-            case "Computer wins": ComputerPoints++;
-        }
+    if (winningStatementOn) {
+        document.body.removeChild(winningStatement);
+        winningStatementOn = false;
+    } else if (playerPoints === 5) {
+        winningStatement.textContent = "You Win!";
+        document.body.appendChild(winningStatement);
+        winningStatementOn = true;
+        playerPoints = 0;
+        computerPoints = 0;
+    } else if (computerPoints === 5) {
+        winningStatement.textContent = "Computer wins!"
+        document.body.appendChild(winningStatement);
+        winningStatementOn = true;
+        playerPoints = 0;
+        computerPoints = 0;
     }
-    if (playerPoints > ComputerPoints) {
-        console.log("Player won the game");
-    } else if (ComputerPoints > playerPoints) {
-        console.log("Computer won the game");
-    } else {
-        console.log("The game was a tie");
-    }
+
+    playerPointsPara.textContent = `Player Points: ${playerPoints}`;
+    computerPointsPara.textContent = `Computer Points: ${computerPoints}`;
 }
 
-// UI branch
+
